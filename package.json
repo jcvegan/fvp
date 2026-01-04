@@ -1,0 +1,24 @@
+{
+  "name": "fvp",
+  "version": "1.0.0",
+  "description": "Family Vega Pacheco toolbox",
+  "keywords": [
+    "toolbox"
+  ],
+  "homepage": "https://github.com/jcvegan/fvp#readme",
+  "bugs": {
+    "url": "https://github.com/jcvegan/fvp/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jcvegan/fvp.git"
+  },
+  "license": "MIT",
+  "author": "Juan Carlos Vega Neira",
+  "type": "commonjs",
+  "main": "index.js",
+  "scripts": {
+    "generate-certificate":"openssl req -x509 -nodes -days 825 -newkey rsa:4096 -keyout nginx/certs/localhost.key -out nginx/certs/localhost.crt -subj \"/C=CA/ST=QC/L=Quebec/O=LocalDev/OU=IT/CN=localhost\"  -addext \"subjectAltName=DNS:localhost,IP:127.0.0.1\"",
+    "start": "docker compose up -d"
+  }
+}

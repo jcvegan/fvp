@@ -1,0 +1,12 @@
+{
+    "extends": [
+        "config:base"
+    ],
+    "packageRules": [
+        {
+        "matchDatasources": ["github-actions"],
+        "groupName": "github actions",
+        "schedule": ["before 5am on monday"]
+        }
+    ]
+}
