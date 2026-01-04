@@ -17,7 +17,7 @@ npm run start
 
 ## Applications
 
-| Application | URL                    | col3 |
-| ----------- | ---------------------- | ---- |
-| Firefly III | https://localhost:9000 |      |
-|             |                        |      |
+| Application               | URL                    |
+| ------------------------- | ---------------------- |
+| Firefly III               | https://localhost:9000 |
+| Firefly III Data Importer | https://localhost:9001 |
