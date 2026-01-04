@@ -15,6 +15,17 @@ services:
       - firefly_iii
     depends_on:
       - db
+  importer:
+    image: fireflyiii/data-importer:latest
+    container_name: firefly_iii_importer
+    restart: always
+    env_file: .importer.env
+    expose:
+      - "8080"
+    depends_on:
+      - app
+    networks:
+      - firefly_iii
   db:
     image: mariadb:lts
     hostname: db
@@ -31,10 +42,10 @@ services:
     restart: always
     ports:
       - "9000:9000"
+      - "9001:9001"
     volumes:
       - ./nginx/firefly.conf:/etc/nginx/conf.d/default.conf:ro
       - ./nginx/certs:/etc/nginx/certs:ro
-
     networks:
       - firefly_iii
     depends_on:
