@@ -17,7 +17,14 @@ npm run start
 
 ## Applications
 
-| Application               | URL                    |
-| ------------------------- | ---------------------- |
-| Firefly III               | https://localhost:9000 |
-| Firefly III Data Importer | https://localhost:9001 |
+| Application               | URL                    | Username       | Password                                         |
+| ------------------------- | ---------------------- | -------------- | ------------------------------------------------ |
+| Redis Commander           | http://localhost:8998  | (Not required) | (Not required)                                   |
+| PgAdmin                   | http://localhost:8999  | admin@fvp.app  | es9BdZitdmpZjTMPiUe6afxT8vD3J0Xf2dojcxhoxfYhcn4H |
+| Authentik                 | https://localhost:9443 | (Not set yet)  | (Not set yet)                                    |
+| Firefly III               | https://localhost:9001 | (Not set yet)  | (Not set yet)                                    |
+| Firefly III Data Importer | https://localhost:9002 | (Not required) | (Not required)                                   |
+
+## Credentials
+
+The credentials listed on the applications are the admin ones

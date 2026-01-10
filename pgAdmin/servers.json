@@ -1,0 +1,15 @@
+{
+    "Servers": {
+        "1": {
+            "Group": "Servers",
+            "Name": "FVP",
+            "Host": "db",
+            "Port": 5432,
+            "MaintenanceDB": "postgres",
+            "Username": "postgres",
+            "Password": "GEy9srFkdYRn7FeDx3mCBtZ80r1o0vWy",
+            "SSLMode": "prefer",
+            "Favorite": true
+        }
+    }
+}

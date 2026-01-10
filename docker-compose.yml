@@ -1,20 +1,21 @@
 version: '3.8'
 
 services:
-  app:
+  firefly_iii:
     image: fireflyiii/core:latest
-    hostname: app
+    hostname: firefly_iii
     container_name: firefly_iii_core
     restart: always
     expose:
       - "8080"
     volumes:
       - firefly_iii_upload:/var/www/html/storage/upload
-    env_file: .env
+    env_file: .firefly.env
     networks:
-      - firefly_iii
+      - fvp
     depends_on:
       - db
+      - redis
   importer:
     image: fireflyiii/data-importer:latest
     container_name: firefly_iii_importer
@@ -23,38 +24,112 @@ services:
     expose:
       - "8080"
     depends_on:
-      - app
-    networks:
       - firefly_iii
+    networks:
+      - fvp
   db:
-    image: mariadb:lts
+    image: docker.io/library/postgres:17-alpine
+    restart: unless-stopped
     hostname: db
-    container_name: firefly_iii_db
-    restart: always
+    container_name: databases
     env_file: .db.env
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
     networks:
-      - firefly_iii
+      - fvp
     volumes:
-      - firefly_iii_db:/var/lib/mysql
+      - ./database/configure_dbs.sh:/docker-entrypoint-initdb.d/multiple-databases.sh
+  pgadmin:
+    image: dpage/pgadmin4:9.11.0
+    container_name: fvp_pgadmin
+    restart: always
+    ports:
+      - "8999:80"
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=admin@fvp.app
+      - PGADMIN_DEFAULT_PASSWORD=es9BdZitdmpZjTMPiUe6afxT8vD3J0Xf2dojcxhoxfYhcn4H
+    networks:
+      - fvp
+    volumes:
+      - ./pgAdmin/servers.json:/pgadmin4/servers.json
   nginx:
     image: nginx:alpine
     container_name: firefly_iii_nginx
     restart: always
     ports:
-      - "9000:9000"
       - "9001:9001"
+      - "9002:9002"
     volumes:
       - ./nginx/firefly.conf:/etc/nginx/conf.d/default.conf:ro
       - ./nginx/certs:/etc/nginx/certs:ro
     networks:
-      - firefly_iii
+      - fvp
     depends_on:
-      - app
+      - firefly_iii
+  redis:
+    image: docker.io/library/redis:alpine
+    container_name: redis
+    command: --save 60 1 --loglevel warning
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "redis-cli ping | grep PONG"]
+      start_period: 20s
+      interval: 30s
+      retries: 5
+      timeout: 3s
+    volumes:
+      - redis:/data
+    networks:
+      - fvp
+  redis-commander:
+    image: rediscommander/redis-commander:latest
+    container_name: redis_commander
+    restart: always
+    ports:
+      - "8998:8081"
+    environment:
+      - REDIS_HOSTS=redis:6379
+    networks:
+      - fvp
+  authentik-server:
+    image: ghcr.io/goauthentik/server:2025.12.0-rc3
+    container_name: authentik
+    restart: unless-stopped
+    command: server
+    env_file:
+      - .authentik.env
+    ports:
+      - 9000:9000/tcp # http
+      - 9443:9443/tcp # https
+    expose:
+      - 9000
+      - 9443
+    depends_on:
+      - db
+      - redis
+    networks:
+      - fvp
+  authentik-worker:
+    image: ghcr.io/goauthentik/server:2025.12.0-rc3
+    container_name: authentik_worker
+    restart: unless-stopped
+    user: root
+    command: worker
+    env_file:
+      - .authentik.env
+    depends_on:
+      - db
+      - redis
+    networks:
+      - fvp
 
 volumes:
    firefly_iii_upload:
    firefly_iii_db:
-
+   redis:
 networks:
-  firefly_iii:
+  fvp:
     driver: bridge
