@@ -33,8 +33,6 @@ services:
     hostname: vikunja
     restart: unless-stopped
     env_file: .vikunja.env
-    ports:
-      - "3456:3456"
     expose:
       - "3456"
     networks:
