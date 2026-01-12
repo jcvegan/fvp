@@ -19,6 +19,9 @@
   "main": "index.js",
   "scripts": {
     "generate-certificate":"openssl req -x509 -nodes -days 825 -newkey rsa:4096 -keyout nginx/certs/localhost.key -out nginx/certs/localhost.crt -subj \"/C=CA/ST=QC/L=Quebec/O=LocalDev/OU=IT/CN=localhost\"  -addext \"subjectAltName=DNS:localhost,IP:127.0.0.1\"",
+    "firefly:upgrade-database":"docker exec -it firefly_iii_core php artisan firefly-iii:upgrade-database",
+    "firefly:migrate-database":"docker exec -it firefly_iii_core php artisan migrate --seed",
+    "firefly:migrate-db": "npm run firefly:migrate-database && npm run firefly:upgrade-database",
     "start": "docker compose up -d"
   }
 }
