@@ -24,6 +24,10 @@ npm run start
 | Authentik                 | https://localhost:9443 | (Not set yet)  | (Not set yet)                                    |
 | Firefly III               | https://localhost:9001 | (Not set yet)  | (Not set yet)                                    |
 | Firefly III Data Importer | https://localhost:9002 | (Not required) | (Not required)                                   |
+| Vikunja                   | https://localhost:9003 | (You need to register) | (Input by yourself)                                   |
+| Homebox                   | https://localhost:9004 | (You need to register) | (Input by yourself)                                   |
+| HomeHub                   | https://localhost:9005 | (Not required) | (Not required)                                   |
+| Stirling PDF              | https://localhost:9006 | admin | stirling                                   |
 
 ## Credentials
 
