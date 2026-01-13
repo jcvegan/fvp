@@ -59,6 +59,13 @@ services:
       - ./homehub/config.yml:/app/config.yml:ro
     networks:
       - fvp
+  stirling-pdf:
+    image: stirlingtools/stirling-pdf:latest
+    container_name: stirling-pdf
+    hostname: stirling-pdf
+    restart: unless-stopped
+    networks:
+      - fvp
   db:
     image: docker.io/library/postgres:17-alpine
     restart: unless-stopped
@@ -97,11 +104,13 @@ services:
       - "9003:9003"
       - "9004:9004"
       - "9005:9005"
+      - "9006:9006"
     volumes:
       - ./nginx/firefly.conf:/etc/nginx/conf.d/default.conf:ro
       - ./nginx/vikunja.conf:/etc/nginx/conf.d/vikunja.conf:ro
       - ./nginx/homebox.conf:/etc/nginx/conf.d/homebox.conf:ro
       - ./nginx/homehub.conf:/etc/nginx/conf.d/homehub.conf:ro
+      - ./nginx/stirling-pdf.conf:/etc/nginx/conf.d/stirling-pdf.conf:ro
       - ./nginx/certs:/etc/nginx/certs:ro
     networks:
       - fvp
