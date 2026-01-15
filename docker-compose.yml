@@ -7,7 +7,7 @@ services:
     expose:
       - "8080"
     volumes:
-      - firefly_iii_upload:/var/www/html/storage/upload
+      - ./data/firefly/app:/var/www/html/storage/upload
     env_file: .firefly.env
     networks:
       - fvp

@@ -1,3 +1,3 @@
-data/*/*
+data/db/**
+data/firefly/app/**
 !data/**/.gitkeep
-
