@@ -17,18 +17,15 @@ npm run start
 
 ## Applications
 
-| Application               | URL                    | Username               | Password                                         |
-| ------------------------- | ---------------------- | ---------------------- | ------------------------------------------------ |
-| Redis Commander           | http://localhost:8998  | (Not required)         | (Not required)                                   |
-| PgAdmin                   | http://localhost:8999  | admin@fvp.app          | es9BdZitdmpZjTMPiUe6afxT8vD3J0Xf2dojcxhoxfYhcn4H |
-| Authentik                 | https://localhost:9443 | admin@fvp.app          | vUAb96q6LnRLytc3D5Xv2LNF7sUFa7eDz0XJiKWPMCYxwz6b |
-| Firefly III               | https://localhost:9001 | admin@fvp.app          | tnzH2yymr3ouk95uK9g00yhZ5vAeRzF7AmgChbUv4fg3UUZq |
-| Firefly III Data Importer | https://localhost:9002 | (Not required)         | (Not required)                                   |
-| Vikunja                   | https://localhost:9003 | (You need to register) | (Input by yourself)                              |
-| Homebox                   | https://localhost:9004 | (You need to register) | (Input by yourself)                              |
-| HomeHub                   | https://localhost:9005 | (Not required)         | (Not required)                                   |
-| Stirling PDF              | https://localhost:9006 | admin                  | stirling                                         |
-
-## Credentials
-
-The credentials listed on the applications are the admin ones
+| Application               | URL                    |
+| ------------------------- | ---------------------- |
+| Redis Commander           | http://localhost:8998  |
+| PgAdmin                   | http://localhost:8999  |
+| Firefly III               | https://localhost:9001 |
+| Firefly III Data Importer | https://localhost:9002 |
+| Vikunja                   | https://localhost:9003 |
+| Homebox                   | https://localhost:9004 |
+| HomeHub                   | https://localhost:9005 |
+| Stirling PDF              | https://localhost:9006 |
+| Paperless              | https://localhost:9007 |
+| Mealie              | https://localhost:9008 |
