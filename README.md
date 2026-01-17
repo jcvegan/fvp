@@ -27,5 +27,6 @@ npm run start
 | Homebox                   | https://localhost:9004 |
 | HomeHub                   | https://localhost:9005 |
 | Stirling PDF              | https://localhost:9006 |
-| Paperless              | https://localhost:9007 |
-| Mealie              | https://localhost:9008 |
+| Paperless                 | https://localhost:9007 |
+| Mealie                    | https://localhost:9008 |
+| Grocy                     | https://localhost:9009 |
