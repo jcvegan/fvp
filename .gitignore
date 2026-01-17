@@ -1,0 +1,6 @@
+data/db/**
+data/grocy/**
+data/mealie/**
+data/paperless/**
+data/redis/**
+!data/**/.gitkeep
