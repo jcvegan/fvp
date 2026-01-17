@@ -116,6 +116,7 @@ services:
       - "9006:9006"
       - "9007:9007"
       - "9008:9008"
+      - "9009:9009"
     volumes:
       - ./nginx/firefly.conf:/etc/nginx/conf.d/default.conf:ro
       - ./nginx/vikunja.conf:/etc/nginx/conf.d/vikunja.conf:ro
@@ -125,6 +126,7 @@ services:
       - ./nginx/paperless.conf:/etc/nginx/conf.d/paperless.conf:ro
       - ./nginx/certs:/etc/nginx/certs:ro
       - ./nginx/mealie.conf:/etc/nginx/conf.d/mealie.conf:ro
+      - ./nginx/grocy.conf:/etc/nginx/conf.d/grocy.conf:ro
     networks:
       - fvp
     depends_on:
@@ -136,6 +138,7 @@ services:
       - stirling-pdf
       - paperless
       - mealie
+      - grocy
   redis:
     image: docker.io/library/redis:alpine
     container_name: redis
@@ -211,7 +214,17 @@ services:
       - db
     networks:
       - fvp
-
+  grocy:
+    image: lscr.io/linuxserver/grocy:latest
+    container_name: grocy
+    hostname: grocy
+    env_file:
+      - .grocy.env
+    volumes:
+      - ./data/grocy/config:/config
+    restart: unless-stopped
+    networks:
+      - fvp 
 networks:
   fvp:
     driver: bridge
