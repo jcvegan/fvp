@@ -3,4 +3,5 @@ data/grocy/**
 data/mealie/**
 data/paperless/**
 data/redis/**
+data/vaultwarden/**
 !data/**/.gitkeep
