@@ -30,3 +30,4 @@ npm run start
 | Paperless                 | https://localhost:9007 |
 | Mealie                    | https://localhost:9008 |
 | Grocy                     | https://localhost:9009 |
+| Vaultwarden               | https://localhost:9010 |
