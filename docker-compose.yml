@@ -108,7 +108,7 @@ services:
     container_name: nginx
     restart: always
     ports:
-      - "${FRONTEND_PORT}:9000"
+      - "${HOME_MAIN_PORT}:9000"
       - "${FINANCE_FIREFLYCORE_PORT}:9001"
       - "${FINANCE_FIREFLYIMPORT_PORT}:9002"
       - "${ORGANIZATION_VIKUNJA_PORT}:9003"
