@@ -169,6 +169,20 @@ services:
       - db
     networks:
       - fvp
+  koillection:
+    image: koillection/koillection
+    container_name: koillection
+    hostname: koillection
+    restart: unless-stopped
+    env_file: .koillection.env
+    environment:
+      - DB_NAME=${POSTGRES_KOILLECTION_DB}
+      - DB_USER=${POSTGRES_KOILLECTION_USER}
+      - DB_PASSWORD=${POSTGRES_KOILLECTION_PASSWORD}
+    depends_on:
+      - db
+    networks:
+      - fvp
   db:
     image: docker.io/library/postgres:18-alpine
     restart: unless-stopped
@@ -236,6 +250,7 @@ services:
       - "${FOOD_MEALIE_PORT}:9008"
       - "${FOOD_GROCY_PORT}:9009"
       - "${SECURITY_VAULTWARDEN_PORT}:9010"
+      - "${COLLECTION_KOILLECTION_PORT}:9011"
     volumes:
       - ./nginx/frontend.conf:/etc/nginx/conf.d/frontend.conf:ro
       - ./nginx/firefly.conf:/etc/nginx/conf.d/default.conf:ro
@@ -248,6 +263,7 @@ services:
       - ./nginx/mealie.conf:/etc/nginx/conf.d/mealie.conf:ro
       - ./nginx/grocy.conf:/etc/nginx/conf.d/grocy.conf:ro
       - ./nginx/vaultwarden.conf:/etc/nginx/conf.d/vaultwarden.conf:ro
+      - ./nginx/koillection.conf:/etc/nginx/conf.d/koillection.conf:ro
     networks:
       - fvp
     depends_on:
@@ -261,6 +277,7 @@ services:
       - mealie
       - grocy
       - vaultwarden
+      - koillection
       - frontend
   redis:
     image: docker.io/library/redis:alpine
