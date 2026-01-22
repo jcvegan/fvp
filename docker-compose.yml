@@ -9,6 +9,12 @@ services:
     volumes:
       - ./data/firefly/app:/var/www/html/storage/upload
     env_file: .firefly.env
+    environment:
+      - DB_DATABASE=${POSTGRES_FIREFLY_III_DB}
+      - DB_USERNAME=${POSTGRES_FIREFLY_III_USER}
+      - DB_PASSWORD=${POSTGRES_FIREFLY_III_PASSWORD}
+      - APP_URL=https://localhost:${FINANCE_FIREFLYCORE_PORT}
+      - TZ=${APP_TIMEZONE}
     networks:
       - fvp
     depends_on:
@@ -19,6 +25,9 @@ services:
     container_name: firefly_iii_importer
     restart: always
     env_file: .importer.env
+    environment:
+      - APP_URL=https://localhost:${FINANCE_FIREFLYIMPORT_PORT}
+      - VANITY_URL=https://localhost:${FINANCE_FIREFLYCORE_PORT}
     expose:
       - "8080"
     depends_on:
@@ -31,6 +40,12 @@ services:
     hostname: vikunja
     restart: unless-stopped
     env_file: .vikunja.env
+    environment:
+      - VIKUNJA_DATABASE_PASSWORD=${POSTGRES_VIKUNJA_PASSWORD}
+      - VIKUNJA_DATABASE_TYPE=${DB_PROVIDER}
+      - VIKUNJA_DATABASE_USER=${POSTGRES_VIKUNJA_USER}
+      - VIKUNJA_DATABASE_DATABASE=${POSTGRES_VIKUNJA_DB}
+      - VIKUNJA_SERVICE_PUBLICURL=https://localhost:${ORGANIZATION_VIKUNJA_PORT}
     expose:
       - "3456"
     networks:
@@ -42,6 +57,10 @@ services:
     container_name: homebox
     restart: always
     env_file: .homebox.env
+    environment:
+      - HBOX_DATABASE_USERNAME=${POSTGRES_HOMEBOX_USER}
+      - HBOX_DATABASE_PASSWORD=${POSTGRES_HOMEBOX_PASSWORD}
+      - HBOX_DATABASE_DATABASE=${POSTGRES_HOMEBOX_DB}
     volumes:
       - ./homebox/config:/config
       - ./homebox/media:/media
@@ -55,8 +74,6 @@ services:
     image: ghcr.io/surajverma/homehub:latest
     restart: always
     env_file: .homehub.env
-    depends_on:
-      - db
     volumes:
       - ./homehub/config.yml:/app/config.yml:ro
     networks:
@@ -67,9 +84,85 @@ services:
     hostname: stirling-pdf
     restart: unless-stopped
     env_file: .stirling.env
+    environment:
+      - SYSTEM_DATASOURCE_CUSTOMDATABACKENDURL=jdbc:postgresql://db:5432/${POSTGRES_STIRLING_DB}
+      - SYSTEM_DATASOURCE_USERNAME=${POSTGRES_STIRLING_USER}
+      - SYSTEM_DATASOURCE_PASSWORD=${POSTGRES_STIRLING_PASSWORD}
     volumes:
       - ./stirling-pdf/ocr/fra.traineddata:/usr/share/tessdata/fra.traineddata
       - ./stirling-pdf/ocr/spa.traineddata:/usr/share/tessdata/spa.traineddata
+    depends_on:
+      - db
+    networks:
+      - fvp
+  paperless:
+    image: ghcr.io/paperless-ngx/paperless-ngx:latest
+    container_name: paperless
+    hostname: paperless
+    restart: unless-stopped
+    env_file: .paperless.env
+    environment:
+      - PAPERLESS_DBNAME=${POSTGRES_PAPERLESS_DB}
+      - PAPERLESS_DBUSER=${POSTGRES_PAPERLESS_USER}
+      - PAPERLESS_DBPASS=${POSTGRES_PAPERLESS_PASSWORD}
+      - PAPERLESS_URL=https://localhost:${DIGITAL_PAPERLESS_PORT}
+    depends_on:
+      - redis
+      - db
+      - tika
+      - gotenberg
+    networks:
+      - fvp
+    volumes:
+      - ./data/paperless/data:/usr/src/paperless/data
+      - ./data/paperless/media:/usr/src/paperless/media
+      - ./data/paperless/export:/usr/src/paperless/export
+      - ./data/paperless/consume:/usr/src/paperless/consume
+  mealie:
+    image: ghcr.io/mealie-recipes/mealie:v3.9.2 # 
+    container_name: mealie
+    hostname: mealie
+    restart: always
+    deploy:
+      resources:
+        limits:
+          memory: 1000M
+    volumes:
+      - ./data/mealie:/app/data
+    env_file: .mealie.env
+    environment:
+      - POSTGRES_USER=${POSTGRES_MEALIE_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_MEALIE_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_MEALIE_DB}
+      - BASE_URL=https://localhost:${FOOD_MEALIE_PORT}
+      - TZ=${APP_TIMEZONE}
+    depends_on:
+      - db
+    networks:
+      - fvp
+  grocy:
+    image: lscr.io/linuxserver/grocy:latest
+    container_name: grocy
+    hostname: grocy
+    env_file:
+      - .grocy.env
+    environment:
+      - TZ=${APP_TIMEZONE}
+    volumes:
+      - ./data/grocy/config:/config
+    restart: unless-stopped
+    networks:
+      - fvp
+  vaultwarden:
+    image: vaultwarden/server:latest
+    container_name: vaultwarden
+    hostname: vaultwarden
+    restart: unless-stopped
+    env_file: .vaultwarden.env
+    environment:
+      - DATABASE_URL=postgresql://${POSTGRES_VAULTWARDEN_USER}:${POSTGRES_VAULTWARDEN_PASSWORD}@db:5432/${POSTGRES_VAULTWARDEN_DB}
+    volumes:
+      - ./data/vaultwarden:/data
     depends_on:
       - db
     networks:
@@ -79,7 +172,29 @@ services:
     restart: unless-stopped
     hostname: db
     container_name: databases
-    env_file: .db.env
+    environment:
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_FIREFLY_III_USER=${POSTGRES_FIREFLY_III_USER}
+      - POSTGRES_FIREFLY_III_PASSWORD=${POSTGRES_FIREFLY_III_PASSWORD}
+      - POSTGRES_FIREFLY_III_DB=${POSTGRES_FIREFLY_III_DB}
+      - POSTGRES_VIKUNJA_USER=${POSTGRES_VIKUNJA_USER}
+      - POSTGRES_VIKUNJA_PASSWORD=${POSTGRES_VIKUNJA_PASSWORD}
+      - POSTGRES_VIKUNJA_DB=${POSTGRES_VIKUNJA_DB}
+      - POSTGRES_HOMEBOX_USER=${POSTGRES_HOMEBOX_USER}
+      - POSTGRES_HOMEBOX_PASSWORD=${POSTGRES_HOMEBOX_PASSWORD}
+      - POSTGRES_HOMEBOX_DB=${POSTGRES_HOMEBOX_DB}
+      - POSTGRES_STIRLING_USER=${POSTGRES_STIRLING_USER}
+      - POSTGRES_STIRLING_PASSWORD=${POSTGRES_STIRLING_PASSWORD}
+      - POSTGRES_STIRLING_DB=${POSTGRES_STIRLING_DB}
+      - POSTGRES_PAPERLESS_USER=${POSTGRES_PAPERLESS_USER}
+      - POSTGRES_PAPERLESS_PASSWORD=${POSTGRES_PAPERLESS_PASSWORD}
+      - POSTGRES_PAPERLESS_DB=${POSTGRES_PAPERLESS_DB}
+      - POSTGRES_MEALIE_USER=${POSTGRES_MEALIE_USER}
+      - POSTGRES_MEALIE_PASSWORD=${POSTGRES_MEALIE_PASSWORD}
+      - POSTGRES_MEALIE_DB=${POSTGRES_MEALIE_DB}
+      - POSTGRES_VAULTWARDEN_USER=${POSTGRES_VAULTWARDEN_USER}
+      - POSTGRES_VAULTWARDEN_PASSWORD=${POSTGRES_VAULTWARDEN_PASSWORD}
+      - POSTGRES_VAULTWARDEN_DB=${POSTGRES_VAULTWARDEN_DB}
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres"]
       interval: 5s
@@ -97,8 +212,8 @@ services:
     ports:
       - "8999:80"
     environment:
-      - PGADMIN_DEFAULT_EMAIL=admin@fvp.app
-      - PGADMIN_DEFAULT_PASSWORD=es9BdZitdmpZjTMPiUe6afxT8vD3J0Xf2dojcxhoxfYhcn4H
+      - PGADMIN_DEFAULT_EMAIL=${APP_DEFAULT_EMAIL}
+      - PGADMIN_DEFAULT_PASSWORD=${APP_DEFAULT_PASSWORD}
     networks:
       - fvp
     volumes:
@@ -186,63 +301,6 @@ services:
       - "gotenberg"
       - "--chromium-disable-javascript=true"
       - "--chromium-allow-list=file:///tmp/.*"
-  paperless:
-    image: ghcr.io/paperless-ngx/paperless-ngx:latest
-    container_name: paperless
-    hostname: paperless
-    restart: unless-stopped
-    env_file: .paperless.env
-    depends_on:
-      - redis
-      - db
-      - tika
-      - gotenberg
-    networks:
-      - fvp
-    volumes:
-      - ./data/paperless/data:/usr/src/paperless/data
-      - ./data/paperless/media:/usr/src/paperless/media
-      - ./data/paperless/export:/usr/src/paperless/export
-      - ./data/paperless/consume:/usr/src/paperless/consume
-  mealie:
-    image: ghcr.io/mealie-recipes/mealie:v3.9.2 # 
-    container_name: mealie
-    hostname: mealie
-    restart: always
-    deploy:
-      resources:
-        limits:
-          memory: 1000M
-    volumes:
-      - ./data/mealie:/app/data
-    env_file: .mealie.env
-    depends_on:
-      - db
-    networks:
-      - fvp
-  grocy:
-    image: lscr.io/linuxserver/grocy:latest
-    container_name: grocy
-    hostname: grocy
-    env_file:
-      - .grocy.env
-    volumes:
-      - ./data/grocy/config:/config
-    restart: unless-stopped
-    networks:
-      - fvp
-  vaultwarden:
-    image: vaultwarden/server:latest
-    container_name: vaultwarden
-    hostname: vaultwarden
-    restart: unless-stopped
-    env_file: .vaultwarden.env
-    volumes:
-      - ./data/vaultwarden:/data
-    depends_on:
-      - db
-    networks:
-      - fvp
   frontend:
     image: fvp_frontend
     build:
