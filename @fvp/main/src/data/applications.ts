@@ -136,6 +136,19 @@ export const domainsWithApps: Domain[] = [{
     }
   }]
 }, {
+  name: 'Games and Entertainment',
+  description: 'Applications to help you manage your games and entertainment.',
+  applications: [{
+    name: 'Koillection',
+    description: 'Koillection is a self-hosted collection manager created to keep track of physical (mostly) collections of any kind like books, DVDs, stamps, games... Koillection is meant to be used for any kind of collections and doesn\'t come with pre-built metadata download. But you can tailor your own HTML scraper, or you can add your own metadata freely.',
+    urls: {
+      app: `https://localhost:${env.COLLECTION_KOILLECTION_PORT}`,
+      docs: 'https://github.com/benjaminjonard/koillection/wiki',
+      website: 'https://github.com/benjaminjonard/koillection',
+      logo: 'https://user-images.githubusercontent.com/20560781/80213166-0e560e00-8639-11ea-944e-4f79fdbcef55.png'
+    }
+  }]
+}, {
   name: 'Internal Tools',
   description: 'Applications to help you manage internal tools.',
   applications: [{
