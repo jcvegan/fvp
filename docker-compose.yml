@@ -88,6 +88,8 @@ services:
       - SYSTEM_DATASOURCE_CUSTOMDATABACKENDURL=jdbc:postgresql://db:5432/${POSTGRES_STIRLING_DB}
       - SYSTEM_DATASOURCE_USERNAME=${POSTGRES_STIRLING_USER}
       - SYSTEM_DATASOURCE_PASSWORD=${POSTGRES_STIRLING_PASSWORD}
+      - SECURITY_INITIALLOGIN_USERNAME=${APP_DEFAULT_USERNAME}
+      - SECURITY_INITIALLOGIN_PASSWORD=${APP_DEFAULT_PASSWORD}
     volumes:
       - ./stirling-pdf/ocr/fra.traineddata:/usr/share/tessdata/fra.traineddata
       - ./stirling-pdf/ocr/spa.traineddata:/usr/share/tessdata/spa.traineddata
