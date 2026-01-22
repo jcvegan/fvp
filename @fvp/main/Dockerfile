@@ -11,8 +11,9 @@ FROM nginx:alpine AS final
 
 COPY --from=build /app/dist /usr/share/nginx/html
 
-COPY docker-entrypoint.sh /entrypoint.sh
-RUN chmod +x /entrypoint.sh
+COPY --from=build /app/docker-entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh && \
+    sed -i 's/\r$//' /entrypoint.sh
 
 ENTRYPOINT ["/entrypoint.sh"]
 CMD ["nginx", "-g", "daemon off;"]
