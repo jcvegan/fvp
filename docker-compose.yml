@@ -332,6 +332,74 @@ services:
       - .env
     networks:
       - fvp
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: prometheus
+    hostname: prometheus
+    restart: unless-stopped
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--storage.tsdb.retention.time=15d'      # Adjust retention period
+      - '--storage.tsdb.wal-compression'         # Compress write-ahead log
+      - '--web.enable-lifecycle'                 # Enable runtime reloading
+    volumes:
+      - ./prometheus:/etc/prometheus
+      - ./data/prometheus:/prometheus
+    networks:
+      - fvp
+    depends_on:
+      - node-exporter
+  grafana:
+    image: grafana/grafana:latest
+    container_name: grafana
+    hostname: grafana
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      - GF_SECURITY_ADMIN_USER=${APP_DEFAULT_USERNAME}
+      - GF_SECURITY_ADMIN_PASSWORD=${APP_DEFAULT_PASSWORD}
+      - GF_USERS_ALLOW_SIGN_UP=false
+    volumes:
+      - ./data/grafana:/var/lib/grafana
+      - ./grafana/provisioning:/etc/grafana/provisioning
+      - ./grafana/dashboards:/var/lib/grafana/dashboards
+    depends_on:
+      - db
+      - node-exporter
+      - prometheus
+    networks:
+    - fvp
+  node-exporter:
+    image: prom/node-exporter:latest
+    container_name: node-exporter
+    hostname: node-exporter
+    restart: unless-stopped
+    volumes:
+      - ./data/node-exporter/proc:/host/proc:ro
+      - ./data/node-exporter/sys:/host/sys:ro
+      - ./data/node-exporter/root:/rootfs:ro
+    command:
+      - '--path.procfs=/host/proc'
+      - '--path.sysfs=/host/sys'
+      - '--collector.filesystem.ignored-mount-points=^/(sys|proc|dev|host|etc)($|/)'
+    networks:
+      - fvp
+  cadvisor:
+    image: gcr.io/cadvisor/cadvisor:latest
+    container_name: cadvisor
+    volumes:
+      - /:/rootfs:ro
+      - /var/run:/var/run:rw
+      - /sys:/sys:ro
+      - /var/lib/docker/:/var/lib/docker:ro
+      - /dev/disk/:/dev/disk:ro
+    ports:
+      - "8080:8080"
+    networks:
+      - fvp
+    restart: unless-stopped
 networks:
   fvp:
     driver: bridge
