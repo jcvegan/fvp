@@ -169,5 +169,14 @@ export const domainsWithApps: Domain[] = [{
       website: 'https://joeferner.github.io/redis-commander/',
       logo: 'https://joeferner.github.io/redis-commander/images/banner.png'
     }
+  }, {
+    name: 'Grafana',
+    description: 'Grafana is a multi-platform open source analytics and interactive visualization web application. It can produce charts, graphs, and alerts for the web when connected to supported data sources.',
+    urls: {
+      app: `https://localhost:${env.TOOL_GRAFANA_PORT}`,
+      docs: 'https://grafana.com/docs/?plcmt=learn-nav',
+      website: 'https://grafana.com/',
+      logo: 'https://grafana.com/media/docs/home/logos/grafana-sm.svg'
+    }
   }]
 }];

@@ -12,6 +12,7 @@ export type RuntimeEnv = {
   FOOD_GROCY_PORT?: string;
   SECURITY_VAULTWARDEN_PORT?: string;
   COLLECTION_KOILLECTION_PORT?: string;
+  TOOL_GRAFANA_PORT?: string;
 }
 
 export const env: RuntimeEnv = import.meta.env.DEV ? {
@@ -28,7 +29,7 @@ export const env: RuntimeEnv = import.meta.env.DEV ? {
   SECURITY_VAULTWARDEN_PORT: import.meta.env.VITE_SECURITY_VAULTWARDEN_PORT,
   DASHBOARD_HOMEHUB_PORT: import.meta.env.VITE_DASHBOARD_HOMEHUB_PORT,
   COLLECTION_KOILLECTION_PORT: import.meta.env.VITE_COLLECTION_KOILLECTION_PORT,
-
+  TOOL_GRAFANA_PORT: import.meta.env.VITE_TOOL_GRAFANA_PORT
 } : {
   TOOL_PGADMIN4_PORT: window.__ENV__?.TOOL_PGADMIN4_PORT ?? '',
   TOOL_REDISCOMMANDER_PORT: window.__ENV__?.TOOL_REDISCOMMANDER_PORT ?? '',
@@ -43,4 +44,5 @@ export const env: RuntimeEnv = import.meta.env.DEV ? {
   SECURITY_VAULTWARDEN_PORT: window.__ENV__?.SECURITY_VAULTWARDEN_PORT ?? '',
   DASHBOARD_HOMEHUB_PORT: window.__ENV__?.DASHBOARD_HOMEHUB_PORT ?? '',
   COLLECTION_KOILLECTION_PORT: window.__ENV__?.COLLECTION_KOILLECTION_PORT ?? '',
-}
+  TOOL_GRAFANA_PORT: window.__ENV__?.TOOL_GRAFANA_PORT ?? ''
+};
