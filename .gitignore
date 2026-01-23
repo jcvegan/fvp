@@ -1,7 +1,9 @@
 data/db/**
+data/grafana/**
 data/grocy/**
 data/mealie/**
 data/paperless/**
+data/prometheus/**
 data/redis/**
 data/vaultwarden/**
 !data/**/.gitkeep
